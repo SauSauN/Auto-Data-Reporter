@@ -8,7 +8,20 @@ import preprocessing
 import analysis
 import visualization
 import report_generator
+import os
+from genericpath import exists
 
+def folder_creator():
+    """
+    Crée les dossiers nécessaires pour stocker les résultats.
+    """
+    try:
+        os.makedirs("data", exist_ok=True)
+        os.makedirs("img", exist_ok=True)
+        os.makedirs("pdf", exist_ok=True)
+    except Exception as e:
+        print(f"Erreur lors de la création des dossiers : {e}")
+    
 def main():
     """
     Fonction principale du projet.
@@ -35,7 +48,6 @@ def main():
     corr_matrix = analysis.get_correlation_matrix(df_features, ['mpg', 'cylinders', 'horsepower', 'weight', 'acceleration'])
     p95_accel = analysis.get_numpy_percentile(df_features, 'acceleration', 95)
     
-    # --- NOUVELLE LIGNE ---
     # Appel de notre nouvelle fonction d'agrégation
     adv_aggs = analysis.get_advanced_aggregates(df_features)
     
@@ -56,7 +68,6 @@ def main():
         
     # Étape 7: Génération du Rapport PDF
     try:
-        # --- MODIFICATION ---
         # Ajoutez le nouvel argument adv_aggs=adv_aggs
         report_generator.create_pdf_report(
             stats_df=stats,
@@ -71,4 +82,5 @@ def main():
     print("=== FIN DU PROJET ===")
 
 if __name__ == "__main__":
+    folder_creator()
     main()
